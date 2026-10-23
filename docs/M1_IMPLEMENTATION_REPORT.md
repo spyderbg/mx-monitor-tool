@@ -211,3 +211,11 @@ Graphical browser QA and a populated actual W4 state/live-Worker observation wer
 Recommended next milestone, only after approval: graphical desktop/narrow-screen QA; read-only checks against an operator-provided actual state root and independently operated Worker; longer observation/resource runs; formal port registration and broader Linux distribution compatibility. No additional milestone, commit, push or external change begins automatically.
 
 Run: `./dist/mx-monitor-tool --no-open`, then open the displayed local URL. Add `--worker-state-dir /path/to/existing/state` for another verified root. No monitoring daemon/container is intentionally left running after verification.
+
+**Operator-requested refinement — process counter (2026-10-23)**
+
+The Processes heading now counts verified live identities as `ACTIVE` and remaining persisted identities as `RECORDED`. One stopped recorded Worker displays `1 RECORDED`; one verified live Worker displays `1 ACTIVE`. Mixed lists display both counts, and an empty list displays `0 RECORDED`. Counting uses the existing per-process `identityVerified` evidence; no collector, Worker-control, authentication or architecture changes were needed.
+
+Added component regression coverage for stopped, live, mixed and empty lists. Follow-up verification on Node 22.23.4: 67 unit/integration tests, 6 component checks and 8 smoke cases passed, with zero failures or skips. Strict typechecking, production build and native SEA packaging passed. Logs are `build/process-counter-{tests,ui,package,smoke}.log`. The full dual-runtime and Docker results above describe the initial M1 verification; those checks were not repeated for this label refinement.
+
+The refreshed `dist/mx-monitor-tool` supersedes the binary checksum above: **126,684,352 bytes**, SHA-256 **`762232551e2b29ee85b6a76f982b9336f7f26c4fb6caa13bd91b58bfdf3d9619`**; ordinary backend bundle **1,711,817 bytes**. The first packaging attempt encountered `ETXTBSY` because the previous executable was running. Its inode was preserved at `build/mx-monitor-tool-before-process-counter`, packaging was rerun successfully, and the existing application was left running. Close and relaunch the updated executable to see the change. No external project changes, Worker control, commits or pushes were performed.

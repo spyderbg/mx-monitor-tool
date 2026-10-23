@@ -38,6 +38,19 @@ test('Processes, tasks/checkpoints and events render the verified-schema fixture
   const events = await render('EventTimeline',{section:snapshot.events},'fixture-events');
   assert.match(events,/Worker service started/); assert.match(events,/Severity/); assert.doesNotMatch(processes+tasks+events,/PRIVATE|SECRET|<script/);
 });
+test('Process counts distinguish verified live processes from recorded identities', async () => {
+  const live = { ...snapshot.processes.items[0]!, identityVerified: true, parentPid: null };
+  const recorded = { ...live, id: 'recorded-worker', pid: live.pid + 1000, identityVerified: false, state: 'gone' };
+  const section = { ...snapshot.processes, items: [recorded] };
+  const stopped = await render('ProcessTree', { section });
+  assert.match(stopped, />1 RECORDED<\/span>/); assert.doesNotMatch(stopped, /\d+ ACTIVE/);
+  const active = await render('ProcessTree', { section: { ...section, items: [live] } });
+  assert.match(active, />1 ACTIVE<\/span>/); assert.doesNotMatch(active, /\d+ RECORDED/);
+  const mixed = await render('ProcessTree', { section: { ...section, items: [live, recorded] } });
+  assert.match(mixed, />1 ACTIVE · 1 RECORDED<\/span>/);
+  const empty = await render('ProcessTree', { section: { ...section, items: [] } });
+  assert.match(empty, />0 RECORDED<\/span>/);
+});
 test('Unavailable, stale, permission error and empty views render without claiming success', async () => {
   const unavailable = source('unavailable',null,'State unavailable.');
   const empty = {source:unavailable,items:[],truncated:false};
