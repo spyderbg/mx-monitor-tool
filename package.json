@@ -1,0 +1,36 @@
+{
+  "name": "mx-monitor-tool",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "tsx scripts/dev.ts",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:smoke": "tsx --test scripts/smoke.ts",
+    "build": "npm run typecheck && tsx scripts/build.ts",
+    "package": "npm run build && tsx scripts/package.ts",
+    "docker:config": "tsx scripts/docker.ts",
+    "test:docker": "tsx scripts/docker-smoke.ts",
+    "test:ui": "tsx --test scripts/ui-smoke.ts",
+    "test:observe": "tsx scripts/observe.ts"
+  },
+  "dependencies": {
+    "fastify": "5.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@vitejs/plugin-vue": "6.0.10",
+    "@vue/server-renderer": "3.5.44",
+    "esbuild": "0.28.2",
+    "postject": "1.0.0-alpha.6",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "8.3.5",
+    "vue": "3.5.44",
+    "vue-tsc": "3.3.13"
+  }
+}
